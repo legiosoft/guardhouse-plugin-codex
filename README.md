@@ -26,8 +26,33 @@ sign-in branding, and diagnose connection failures.
 
 ## Install from GitHub
 
-Guardhouse is distributed from this public repository. Once the release files
-are published, run these commands in a terminal with Codex CLI installed:
+Guardhouse is distributed from this public repository. First check Codex CLI
+in your normal terminal, even if the desktop app is already installed:
+
+```console
+codex --version
+codex plugin --help
+```
+
+The desktop app's execution environment can differ from your terminal's PATH.
+Installing the desktop app alone is not a check that `codex` is available in
+CMD or PowerShell.
+
+If Windows reports that `codex` is not recognized, open a new PowerShell window
+and run the [official standalone CLI installer](https://learn.chatgpt.com/docs/codex/cli):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"
+```
+
+This standalone installation does not require Node.js. `-ExecutionPolicy
+ByPass` applies to that PowerShell process; no permanent policy change is
+needed. When installation finishes, close and reopen your terminal, then run
+the two checks above again. If `codex plugin --help` is unavailable, update to
+a CLI version that supports plugin commands before continuing.
+
+Once the release files are published and both CLI checks succeed, install the
+plugin:
 
 ```console
 codex plugin marketplace add legiosoft/guardhouse-plugin-codex

@@ -72,6 +72,9 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Fixed
 
+- Document CLI checks and official Windows standalone installation before
+  plugin commands, including reopened-terminal verification when `codex` is
+  not recognized.
 - Treat false or missing `configuration_complete` as an incomplete read. Never
   derive replacement sets or full removal lists from partial values; require
   independently established exact replacements and approval of possible

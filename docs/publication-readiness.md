@@ -229,8 +229,23 @@ until results are recorded from the actual supported surface.
 
 ### Plugin installation and upgrade cases
 
+For Windows command-not-recognized recovery, use the
+[official standalone CLI instructions](https://learn.chatgpt.com/docs/codex/cli).
+Start from a new PowerShell window:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"
+```
+
+Close and reopen the terminal afterward, then verify `codex --version` and
+`codex plugin --help` before running plugin commands. The execution-policy
+option applies only to that installer process; Node.js and permanent policy
+changes are not prerequisites. Check the user's normal terminal independently
+of the desktop app's execution environment.
+
 | Fixture or prompt | Expected behavior |
 | --- | --- |
+| Windows CMD or PowerShell reports `codex` is not recognized | Use the Windows recovery instructions above, then verify the CLI version and plugin command support in a reopened terminal. Do not assume that an installed desktop app establishes terminal command availability. Keep an instructions-only request instructional, and do not ask for a Guardhouse address or start OAuth. |
 | `$guardhouse How do I install the Guardhouse plugin?` | Return the public Git commands `codex plugin marketplace add legiosoft/guardhouse-plugin-codex` and `codex plugin add guardhouse@guardhouse`, followed by `codex plugin list --marketplace guardhouse --json` and new-chat/reload guidance. Keep the answer instructional: do not execute installation, start instance discovery or sign-in, or ask for a Guardhouse server address. Explain that the published branch must contain the catalog and package files. |
 | `$guardhouse How do I upgrade the Guardhouse plugin?` with a public Git installation | Use available read-only plugin metadata to establish the source, then explain `codex plugin marketplace upgrade guardhouse` followed by `codex plugin add guardhouse@guardhouse`, installation-status verification, and a new chat or host reload. Do not run those mutations merely because the user asked how. |
 | Upgrade question with an existing local development or alternate marketplace installation | Identify and preserve the actual source. Explain rebuilding/reinstalling a local package or refreshing/reinstalling from the selected Git marketplace; do not silently switch to the public Git catalog. If the source cannot be established, state that uncertainty before proposing source-specific commands. |
@@ -481,6 +496,7 @@ discovery or configuration unless the user already supplied it.
 
 | Gate | Expected evidence | Status |
 | --- | --- | --- |
+| Windows terminal CLI prerequisite | Check `codex --version` and `codex plugin --help` outside the desktop execution environment. For an unrecognized command, verify official standalone installation from a new PowerShell window and reopened-terminal checks without permanent policy changes or Guardhouse sign-in. | Not run |
 | Plugin installation and upgrades | Instructions-only questions do not execute package mutations, ask for an instance URL, or start OAuth. Authorized actions use supported native commands and the actual installation source, verify plugin status, and require a new chat/reload; no automatic Git update schedule is promised. | Not run |
 | Novice getting started | An invoked getting-started skill explains Guardhouse, asks once for an absent server address only after the active host verifies an unconfigured state, handles users without an instance, and preserves supplied-URL and status-only boundaries. Installation alone triggers no background connection work. | Not run |
 | First interaction and status-only request | Show the observed instance/status and relevant connection or setup guidance without changing configuration or starting sign-in. | Not run |
@@ -610,6 +626,9 @@ release version.
 - [ ] Confirm the repository's default branch contains the intended candidate;
       use `--ref <published-tag>` when documenting installation of a specific
       tagged release. A GitHub Release ZIP attachment is optional.
+- [ ] Verify `codex --version` and `codex plugin --help` in a normal terminal;
+      exercise Windows command-not-recognized recovery without relying on the
+      desktop app's session PATH or changing permanent execution policy.
 - [ ] Verify these exact commands from a fresh supported host:
 
       ```console

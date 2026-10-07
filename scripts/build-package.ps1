@@ -122,6 +122,12 @@ function Test-PublicHost {
         'learn.chatgpt.com', 'www.apache.org', 'keepachangelog.com', 'semver.org'
     )
     if ($publicHosts -contains $hostName) { return $true }
+    # Approve only the official Windows CLI installer documented for setup.
+    if ($hostName -eq 'chatgpt.com') {
+        return $Uri.Scheme -eq 'https' -and $Uri.IsDefaultPort -and
+            $Uri.AbsolutePath -ceq '/codex/install.ps1' -and
+            -not $Uri.Query -and -not $Uri.Fragment
+    }
     if ($hostName -eq 'example' -or $hostName.EndsWith('.example') -or
         $hostName -eq 'invalid' -or $hostName.EndsWith('.invalid')) { return $true }
     foreach ($reserved in @('example.com', 'example.net', 'example.org')) {

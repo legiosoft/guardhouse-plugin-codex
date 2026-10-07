@@ -12,7 +12,8 @@ answer that question. For an explicit install or upgrade request, use Codex's
 native plugin commands when available and proceed within that authorization.
 Check the installed CLI's help before executing commands. If plugin commands
 are unavailable, explain that a compatible Codex CLI is needed; do not invent
-commands or add a custom updater.
+commands or add a custom updater. Use the CLI prerequisite guidance below when
+the terminal cannot find `codex`.
 
 For an upgrade action, establish the installed plugin ID and marketplace source
 through safe plugin metadata from the active host/profile:
@@ -27,6 +28,35 @@ configuration files or inspect credentials. An empty result from another
 profile does not prove the user's active installation is absent. If its source
 cannot be established, give instructions or clarify the installation route
 before changing it.
+
+## Make Codex CLI available in the terminal
+
+Check in the user's normal terminal:
+
+```console
+codex --version
+codex plugin --help
+```
+
+The desktop app can supply its own command environment. Finding a binary in an
+app-managed session does not prove that the user's CMD or PowerShell can find
+`codex` on Windows PATH.
+
+If Windows says `'codex' is not recognized`, open a new PowerShell window and
+run the [official standalone CLI installer](https://learn.chatgpt.com/docs/codex/cli):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"
+```
+
+The standalone CLI does not require Node.js. The execution-policy option applies
+only to that installer process; do not change permanent security policies.
+Close and reopen the terminal after installation, then repeat both checks.
+If CLI installation exists but resolution still fails, inspect its intended
+command location and terminal PATH without replacing unrelated PATH entries or
+pointing users at a version-specific desktop binary. If `plugin` is unsupported,
+update to a compatible Codex CLI before running plugin commands. Installing or
+updating Codex CLI is distinct from updating the Guardhouse plugin.
 
 ## Install from the public GitHub repository
 
