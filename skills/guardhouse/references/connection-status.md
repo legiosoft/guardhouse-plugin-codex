@@ -6,8 +6,9 @@ connection read-only and tell the user which instance will receive requests.
 Show it once at the first Guardhouse interaction in a chat, then refresh it
 after a disconnect, reconnect, switch, sign-in, or meaningful connection error.
 Do not repeat it before every tool call or when routing between these skills
-within the same unchanged workflow. Maintaining the plugin's source files does
-not itself require connecting to a Guardhouse deployment.
+within the same unchanged workflow. Plugin installation, upgrades, instructions
+for those actions, and source maintenance do not require a Guardhouse connection
+or this instance check; use the skill's package workflow for those requests.
 
 ## Establish the instance and status
 

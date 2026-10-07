@@ -1,6 +1,6 @@
 interface:
   display_name: "Guardhouse Connection"
-  short_description: "Get started and manage your Guardhouse connection"
+  short_description: "Install, upgrade, and connect Guardhouse in Codex"
   default_prompt: "Use $guardhouse to help me get started, explain what Guardhouse does, and check whether a server is connected."
   brand_color: "#402DAF"
 

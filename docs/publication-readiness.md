@@ -1,9 +1,9 @@
 # Publication readiness
 
-The primary target is a skills-only submission to the built-in Plugins
-Directory for local Codex. A Git marketplace in this public repository is the
-alternate route. This guide covers package validation and release requirements;
-the current beta candidate is not listed in the Directory.
+The distribution target is this public GitHub repository's Codex marketplace.
+This guide covers source and package validation, Git-backed installation, and
+beta release requirements. OpenAI Plugins Directory submission is outside this
+release's scope.
 
 ## Package scope
 
@@ -15,11 +15,9 @@ retains its beta scope.
 Current Codex plugin MCP configuration is static. Official documentation does
 not define a supported per-user plugin setting that can persist an arbitrary
 Guardhouse URL and substitute it into a bundled remote MCP definition. Hosted
-ChatGPT does not consume a user's local Codex MCP configuration. A skills-only
-plugin can be distributed through a Git-backed marketplace and submitted to
-the universal directory without MCP configuration. Directory eligibility and
-review must account for its local execution requirements; submission does not
-provide hosted access to a user's Guardhouse server.
+ChatGPT does not consume a user's local Codex MCP configuration. The skills-only
+plugin is distributed through a Git-backed marketplace, and the local Codex
+host configures the connection to the user's chosen Guardhouse server.
 
 Therefore:
 
@@ -27,20 +25,16 @@ Therefore:
   local Codex MCP configuration;
 - public Git-backed marketplace distribution uses the current skills-only
   package and the `guardhouse` catalog in the published repository;
-- a universal-directory submission must disclose that workflows require local
-  configuration access, native sign-in, and local project access; and
+- workflows require local configuration access, native sign-in, and local
+  project access; and
 - this repository does not implement a central proxy, bootstrap service,
   custom installer, or unsupported URL-substitution mechanism.
 
-OpenAI's [package guide](https://developers.openai.com/plugins/build/plugins)
-distinguishes repo marketplaces from the universal public directory. The
-[submission process](https://developers.openai.com/plugins/deploy/submission)
-allows skills-only packages without MCP configuration or MCP app review cases;
-the [plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines)
-apply metadata, policy, skill scans, and possible additional eligibility
-requirements to those packages. Confirm local execution eligibility with the
-current submission flow instead of assuming every directory surface supports
-these workflows.
+OpenAI's
+[package guide](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli)
+documents adding a GitHub repository as a marketplace source. Git-backed
+distribution does not require OpenAI publisher verification or Directory
+review. Managed workspace policies may restrict installation sources.
 
 ## Guardhouse protocol contract
 
@@ -103,7 +97,6 @@ Guardhouse restart before re-enablement.
 | ChatGPT/Codex desktop host | Supported through a local marketplace | Local Codex MCP configuration, native browser login, reload host, live discovery |
 | Hosted ChatGPT/Codex | Not supported for an arbitrary user-supplied URL | Outside this package's scope |
 | Public Git-backed marketplace | Skills-only package distribution | Installed local host performs configuration and native OAuth |
-| Universal Plugins Directory | Skills-only submission candidate | Requires metadata/skill scans, review, and eligibility disclosure for local execution |
 
 Codex controls native OAuth credential persistence through
 `mcp_oauth_credentials_store`: `auto` (default), `file`, or `keyring`. The
@@ -150,7 +143,7 @@ clients must use the same registered callback pair. Guardhouse also
 accepts an MCP `Origin` header only when its scheme, host, and port match the
 active MCP URL; verify this against every supported local client.
 
-## Proposed skills-only listing
+## Plugin metadata
 
 ### Identity
 
@@ -158,7 +151,7 @@ active MCP URL; verify this against every supported local client.
 - Identifier: `guardhouse`
 - Publisher: **LegioSoft**
 - Version: `0.2.0`
-- Category: **Developer Tools** (confirm against the submission portal)
+- Category: **Developer Tools**
 - License: Apache-2.0
 
 ### Short description
@@ -179,8 +172,7 @@ confirmation and revision checks.
 
 ### Starter prompts
 
-1. Show my current Guardhouse instance and connection status, and how to
-   disconnect, reconnect, or switch instances.
+1. Help me get started with Guardhouse.
 2. Audit my Guardhouse application configuration.
 3. Review and update my Guardhouse sign-in branding.
 
@@ -196,7 +188,7 @@ confirmation and revision checks.
 | Security guidance | https://guardhouse.cloud/docs/operate/security |
 | Source | https://github.com/legiosoft/guardhouse-plugin-codex |
 
-Before submission, verify that these pages are accessible, identify the same
+Before release, verify that these pages are accessible, identify the same
 publisher, and contain complete, production-approved content.
 
 ## Data handling statement
@@ -227,17 +219,30 @@ instructions. HTML and CSS must be reviewed as inert text.
 ## Manual review cases
 
 Invoke `$guardhouse` or its getting-started prompt to enter the connection
-workflow. The manifest's `com.openai.onboardingSkill` metadata identifies the
+workflow. Plugin installation and upgrade questions use the separate cases
+below and do not require a Guardhouse instance. The manifest's
+`com.openai.onboardingSkill` metadata identifies the
 skill a supported host can select; it does not guarantee an automatic run or
 an installation-triggered popup. Installation alone does not start background
 discovery, configuration, or sign-in. All live cases below remain **Not run**
 until results are recorded from the actual supported surface.
 
+### Plugin installation and upgrade cases
+
+| Fixture or prompt | Expected behavior |
+| --- | --- |
+| `$guardhouse How do I install the Guardhouse plugin?` | Return the public Git commands `codex plugin marketplace add legiosoft/guardhouse-plugin-codex` and `codex plugin add guardhouse@guardhouse`, followed by `codex plugin list --marketplace guardhouse --json` and new-chat/reload guidance. Keep the answer instructional: do not execute installation, start instance discovery or sign-in, or ask for a Guardhouse server address. Explain that the published branch must contain the catalog and package files. |
+| `$guardhouse How do I upgrade the Guardhouse plugin?` with a public Git installation | Use available read-only plugin metadata to establish the source, then explain `codex plugin marketplace upgrade guardhouse` followed by `codex plugin add guardhouse@guardhouse`, installation-status verification, and a new chat or host reload. Do not run those mutations merely because the user asked how. |
+| Upgrade question with an existing local development or alternate marketplace installation | Identify and preserve the actual source. Explain rebuilding/reinstalling a local package or refreshing/reinstalling from the selected Git marketplace; do not silently switch to the public Git catalog. If the source cannot be established, state that uncertainty before proposing source-specific commands. |
+| User explicitly asks Codex to install or upgrade the plugin | Verify native command support and the authorized source, perform only the requested plugin operations, check installation/version/enabled status, and explain the required new chat or reload. Do not change Guardhouse MCP settings, request a server address, or initiate OAuth as part of package management. |
+| User asks whether Git-installed plugin updates are automatic | Distinguish possible host-controlled marketplace refresh from the explicit upgrade commands. Do not promise a Git polling schedule, immediate push-to-client delivery, or a plugin-owned background updater. |
+
 ### Opening instance and connection status
 
-Run these at the first Guardhouse interaction in a fresh chat, including direct
-application and branding requests. Each opening must identify the observed
-instance/status and briefly explain disconnect, reconnect, and switch controls
+Run these at the first Guardhouse connection, application, or branding
+interaction in a fresh chat. Plugin-only installation and upgrade requests use
+the cases above instead of this instance check. Each opening must identify the
+observed instance/status and briefly explain disconnect, reconnect, and switch controls
 when relevant, without forcing a menu choice or changing the connection merely
 to check it. For a verified unconfigured host, explain Guardhouse and the next
 setup step in plain language instead of listing controls for a nonexistent
@@ -460,8 +465,8 @@ check does not establish remote availability, sign-in, or MCP functionality.
 
 | Surface | Intended scope | Candidate result | Remaining gate |
 | --- | --- | --- | --- |
-| Codex CLI | Built-in Directory after approval; published repository marketplace; native local MCP/OAuth | Local catalog discovery passed. Fresh installation and live integration not run. | Install the candidate, restart the session, complete native OAuth, and verify live identity/tools and recovery. |
-| ChatGPT desktop app, local Codex surface | Primary Directory installation after approval; local skills and MCP configuration | Not run. Directory approval and listing are pending. | Confirm installation/enablement, configuration reload, native sign-in, and the same live/recovery cases. |
+| Codex CLI | Published GitHub marketplace; native local MCP/OAuth | Local catalog discovery passed. Fresh remote installation and live integration not run. | Publish the catalog and plugin files, install the candidate, restart the session, complete native OAuth, and verify live identity/tools and recovery. |
+| ChatGPT desktop app, local Codex surface | Git-backed/local plugin installation; local skills and MCP configuration | Remote installation and live integration not run. | Confirm installation/enablement, configuration reload, native sign-in, and the same live/recovery cases. |
 | Codex IDE extension | Direct MCP configuration and authentication; plugin installation is unavailable | Not run. | Confirm compatible client/callback settings, authenticate and restart, then verify live tools and recovery through direct MCP. |
 | Hosted-only ChatGPT/Codex | Arbitrary user-selected Guardhouse URLs are outside this package's scope | Not applicable. | Unsupported by this package. |
 
@@ -476,6 +481,7 @@ discovery or configuration unless the user already supplied it.
 
 | Gate | Expected evidence | Status |
 | --- | --- | --- |
+| Plugin installation and upgrades | Instructions-only questions do not execute package mutations, ask for an instance URL, or start OAuth. Authorized actions use supported native commands and the actual installation source, verify plugin status, and require a new chat/reload; no automatic Git update schedule is promised. | Not run |
 | Novice getting started | An invoked getting-started skill explains Guardhouse, asks once for an absent server address only after the active host verifies an unconfigured state, handles users without an instance, and preserves supplied-URL and status-only boundaries. Installation alone triggers no background connection work. | Not run |
 | First interaction and status-only request | Show the observed instance/status and relevant connection or setup guidance without changing configuration or starting sign-in. | Not run |
 | Native OAuth and stable callback | The host supports the public client and exact callback pair; the approved port/URL are used, `iss` matches discovery, and native sign-in completes. | Not run |
@@ -601,6 +607,9 @@ release version.
       `AVAILABLE`, authentication `ON_USE`, and category `Developer Tools`.
 - [ ] Publish the reviewed release files and catalog in the public repository
       before verifying remote installation.
+- [ ] Confirm the repository's default branch contains the intended candidate;
+      use `--ref <published-tag>` when documenting installation of a specific
+      tagged release. A GitHub Release ZIP attachment is optional.
 - [ ] Verify these exact commands from a fresh supported host:
 
       ```console
@@ -610,37 +619,13 @@ release version.
       ```
 - [ ] Verify a fresh supported local Codex host can register that Git-backed
       marketplace, install and enable Guardhouse, and invoke its skills.
+- [ ] Exercise the plugin installation/upgrade cases above; verify that
+      instructions-only questions remain instructional and alternate/local
+      installations retain their actual source.
+- [ ] Verify updates with `codex plugin marketplace upgrade guardhouse`,
+      followed by `codex plugin add guardhouse@guardhouse` and a new chat.
 - [ ] Complete the local integration checklist for the advertised supported
       surfaces; record unavailable scenarios as not run.
-
-### Universal Plugins Directory: skills-only candidate
-
-- [ ] Confirm local Codex is the intended supported execution environment;
-      keep beta status, administrator prerequisites, and application/branding
-      boundaries consistent across the manifest, skills, and listing.
-- [ ] Complete OpenAI developer identity verification and obtain the required
-      submission permissions.
-- [ ] Upload the reviewed skills-only ZIP without MCP configuration,
-      `mcpServers`, lifecycle hooks, or MCP app review metadata.
-- [ ] Disclose that connection setup needs local Codex configuration access and
-      native browser OAuth, and that application integration needs local
-      project access.
-- [ ] Confirm eligibility and supported execution surfaces through the current
-      review process. Do not claim arbitrary self-hosted connectivity from
-      hosted ChatGPT or universal availability of local execution.
-- [ ] Complete metadata and skill scans, resolve required findings, and submit
-      the selected draft for review.
-- [ ] Check the approved version and publication settings, then publish it
-      through the Directory's publication controls.
-- [ ] After publication, verify discovery and installation of **Guardhouse**
-      by **LegioSoft** from the built-in Directory in a local Codex host. Do not
-      describe the candidate as listed before that happens.
-
-Skills-only submissions do not need MCP app test cases, a demo recording, or
-an MCP domain-verification challenge. They still need accurate metadata,
-listing and policy compliance, skill scans, and any additional eligibility
-checks. The manual cases in this document remain maintainer verification
-material rather than claims of completed review.
 
 ### Metadata, legal, and support
 
@@ -653,7 +638,7 @@ material rather than claims of completed review.
 - [ ] Document local data flows and the selected Guardhouse operator's control
       of service-side retention, residency, and deletion behavior.
 - [ ] Do not use OpenAI logos or imply OpenAI first-party ownership.
-- [ ] Select accurate region availability and workspace eligibility.
+- [ ] Document the local-client requirements and managed workspace restrictions.
 - [ ] Describe the nine catalog `1.0.0` tools, existing-browser-only
       application writes, and complete desired-state branding writes without
       implying the package itself exposes a hosted MCP server.
@@ -667,10 +652,9 @@ fields on existing browser applications. Native and service applications remain
 read/audit only. Adds a dedicated branding workflow for safe visual-state reads
 and explicitly confirmed complete desired-state writes with immutable asset
 descriptors and post-write verification. Application creation, asset changes,
-and broader administration are not available. Public Git-backed marketplaces
-use this skills-only package for local Codex hosts. The primary built-in
-Directory route is pending submission, review, and publication, with explicit
-local execution and beta scope. The candidate is not currently listed.
+and broader administration are not available. The public GitHub repository's
+Codex marketplace distributes this skills-only package for local Codex hosts,
+with explicit local execution and beta scope.
 Arbitrary self-hosted URLs remain unavailable to hosted ChatGPT through this
 package.
 

@@ -11,8 +11,12 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 - Add the repository-root `guardhouse` marketplace catalog for public Git
   distribution without a self-referencing Git fetch.
-- Add Codex Plugins Directory submission guidance, public Git marketplace
-  installation commands, and a CLI/desktop/IDE support and validation matrix.
+- Add public Git marketplace installation commands and a CLI/desktop/IDE
+  support and validation matrix.
+- Add `$guardhouse` installation and upgrade guidance, including marketplace
+  refresh, installation-status checks, and new-chat/reload instructions.
+  Preserve an existing installation's source and keep plugin management
+  separate from Guardhouse instance setup and sign-in.
 - Add the `guardhouse-applications` skill for local-project inspection,
   application discovery, redacted configuration reads, access-option
   discovery, intrinsic/project-aware audits, and supported existing-browser
@@ -27,6 +31,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 
+- Distribute through the public GitHub repository's Codex marketplace, with
+  install and update commands at the start of the README.
 - Document explicit `-ReplaceArchive` rebuilding of the same unpublished
   candidate after validation, with atomic replacement of only the expected
   ZIP and no automatic release-version changes.
@@ -37,7 +43,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   metadata; identify beta/local scope and administrator prerequisites in the
   listing while retaining a skills-only package without bundled MCP
   configuration or lifecycle hooks.
-- Build the skills-only submission ZIP from allowlisted resources, with
+- Build the skills-only release ZIP from allowlisted resources, with
   public metadata, source, and archive validation.
 - Start connection, application, and branding workflows with the current
   instance and evidence-based connection status, followed by disconnect,
@@ -76,8 +82,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - After stale-revision re-reads, retain existing exact desired-state/effects
   approval when only the revision changes; reconfirm changed state or newly
   discovered effects and never reuse the stale revision.
-- Bring starter prompts and listing text within current public submission
-  limits, distinguish optional metadata from required review gates, and remove
+- Bring starter prompts and listing text within current public metadata
+  limits, distinguish optional metadata from required fields, and remove
   installation placeholders and links that implied unpublished release tags.
 - Configure Codex's supported fixed MCP OAuth client ID so Guardhouse native
   login uses the pre-registered `guardhouse_codex` public client instead of

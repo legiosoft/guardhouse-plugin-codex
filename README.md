@@ -24,6 +24,62 @@ sign-in branding, and diagnose connection failures.
 > Application creation, registration settings, email templates, roles,
 > native/service writes, deletion, and secret rotation are not supported.
 
+## Install from GitHub
+
+Guardhouse is distributed from this public repository. Once the release files
+are published, run these commands in a terminal with Codex CLI installed:
+
+```console
+codex plugin marketplace add legiosoft/guardhouse-plugin-codex
+codex plugin add guardhouse@guardhouse
+```
+
+Codex downloads the repository and installs the plugin from its `guardhouse`
+catalog. This route does not require OpenAI publisher identity verification or
+Plugins Directory approval. Managed workspaces may restrict plugin sources.
+Start a new Codex chat after installation, then use the getting-started prompt
+below. Installation does not configure a Guardhouse server or start sign-in.
+
+To check installation:
+
+```console
+codex plugin list --marketplace guardhouse --json
+```
+
+The result should show `installed: true` and `enabled: true`.
+
+To upgrade an installation from this public Git marketplace:
+
+```console
+codex plugin marketplace upgrade guardhouse
+codex plugin add guardhouse@guardhouse
+```
+
+Start a new chat after updating; reload the desktop host if needed to load the
+refreshed skills. Git installations use the repository's default branch; add
+`--ref <published-tag>` to the marketplace-add command to select a specific
+published release instead.
+
+For an existing installation from a local development package or another
+marketplace, inspect its actual source with `codex plugin list --json` and
+reinstall from that source. Rebuild a local development package before
+reinstalling it. Do not replace that installation with the public Git source
+unless the user asks to change sources. The plugin has no update scheduler;
+the commands above explicitly request a public Git update.
+
+If the Guardhouse skill is already available, ask for plugin instructions in
+Codex:
+
+```text
+$guardhouse How do I install the Guardhouse plugin?
+$guardhouse How do I upgrade the Guardhouse plugin?
+```
+
+These questions return installation or upgrade guidance. They do not start
+Guardhouse sign-in or ask for a server address. Ask Codex to perform the
+installation or upgrade when you want the commands executed. Plugin management
+is separate from connecting to a Guardhouse instance.
+
 ## Get started
 
 After installing and enabling the plugin, select its getting-started prompt or
@@ -56,11 +112,9 @@ is missing.
 
 ## Distribution model
 
-Version 0.2.0 is a skills-only package. It supports user-specific Guardhouse
-URLs through local Codex configuration. The intended primary distribution is
-the built-in Plugins Directory in a local Codex host after OpenAI approval and
-publication. The public Git marketplace in this repository provides a separate
-installation route for published releases:
+Version 0.2.0 is a skills-only package distributed through this repository's
+Git-backed Codex marketplace. It supports user-specific Guardhouse URLs through
+local Codex configuration.
 
 | Surface | Support |
 | --- | --- |
@@ -68,25 +122,23 @@ installation route for published releases:
 | Codex IDE extension | Local Streamable HTTP MCP configuration; plugins are not available in the IDE |
 | ChatGPT/Codex desktop host | Local plugin installation, setup skill, and local MCP configuration |
 | Hosted ChatGPT/Codex | Not supported for arbitrary self-hosted URLs |
-| Built-in Plugins Directory | Primary route after approval and publication; skills-only candidate requiring local execution eligibility confirmation |
-| Public Git-backed marketplace | Alternate route using this repository's published catalog and release files |
+| Public Git-backed marketplace | Distribution route using this repository's published catalog and plugin files |
 
-This candidate is not listed in the built-in Directory. The Git marketplace
-requires a published release containing the catalog and plugin files.
+The catalog at `.agents/plugins/marketplace.json` points to the plugin at the
+repository root using `./`. Codex reads it from the downloaded Git checkout;
+the entry does not fetch its own repository again. The published checkout must
+contain both the catalog and plugin files. A GitHub Release or separate ZIP
+download is optional for this installation route.
 
-Git-backed marketplaces are separate from the universal directory shared by
-ChatGPT and Codex. A directory submission can contain only skills; it does not
-universally require an MCP endpoint. This package requires a local Codex host
-with access to the user's configuration and project, and submission materials
-must disclose that requirement. Packaging and repository distribution do not
-establish directory approval or availability.
+This plugin is not listed in OpenAI's public Plugins Directory. Git-backed
+marketplaces are separate from that directory. The plugin requires a local
+Codex host with access to the user's configuration and project.
 
 The package intentionally contains no `.mcp.json`: a bundled remote MCP
 definition does not provide an arbitrary per-user URL setting. Guardhouse
 connections through this package require a local Codex host. See OpenAI's
-[package guide](https://developers.openai.com/plugins/build/plugins),
-[submission process](https://developers.openai.com/plugins/deploy/submission),
-and [plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines).
+[package guide](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli)
+for Git-backed marketplace support.
 
 ## Prerequisites
 
@@ -124,41 +176,6 @@ stable URL on each deployment. If the host or server lacks stable-callback
 support, update it instead of generating a new callback for each instance.
 Never copy a full authorization URL, state, code challenge, or authorization
 code.
-
-## Install from the built-in Plugins Directory
-
-After OpenAI approves the candidate and LegioSoft publishes it, open the
-built-in Plugins Directory from local Codex in the desktop app, find
-**Guardhouse** by **LegioSoft**, and install and enable it. Then invoke
-`$guardhouse` to get started and connect your deployment.
-
-Guardhouse is not currently listed there. Installing this skills package will
-still require the local execution environment and administrator prerequisites
-described above; it does not create a hosted connection to an arbitrary server.
-
-## Install from the public Git marketplace
-
-The repository catalog defines a marketplace named `guardhouse`. When the
-release files are available in the public repository, install from Codex CLI:
-
-```console
-codex plugin marketplace add legiosoft/guardhouse-plugin-codex
-codex plugin add guardhouse@guardhouse
-codex plugin list --marketplace guardhouse --json
-```
-
-The catalog at `.agents/plugins/marketplace.json` points to the plugin at the
-repository root using `./`. The Git source supplies that checkout; the entry
-does not fetch its own repository again. Git marketplace installations use
-the published repository version.
-The list result should show `installed: true` and `enabled: true` after
-installation.
-Installing the package does not configure Guardhouse or sign in. Invoke the
-connection skill below for those steps. Plugins are installed through Codex
-CLI or the desktop app; the IDE extension supports direct MCP configuration.
-
-Rebuild and reinstall after local changes. Refresh the Git marketplace
-with `codex plugin marketplace upgrade guardhouse` before installing an update.
 
 ## Install a clean package for local development
 
@@ -232,11 +249,11 @@ After all validation passes, this flag atomically replaces only that manifest
 version's expected ZIP. It does not change the version, remove unrelated output
 files, or publish a release.
 
-Review the generated package and its privacy scan before sharing it. This step
-prepares release files; it does not upload, submit, or publish them, and it does
-not establish OpenAI approval. For a skills-only directory submission, disclose
-the required local execution environment and resolve the portal's metadata,
-skill, and eligibility findings before requesting review.
+Review the generated package and its privacy scan before sharing it. The ZIP
+can be attached to a GitHub Release or used for clean local installation. This
+step prepares release files; it does not upload them or publish the repository.
+Git-backed installation reads the published repository catalog and plugin
+files directly, so attaching the ZIP is optional.
 
 ## Connect
 

@@ -18,10 +18,10 @@ cookies, sensitive headers, and personal or tenant data.
 
 ## Security model
 
-The submission package contains declarative metadata, instructions, and
+The release package contains declarative metadata, instructions, and
 Guardhouse-owned branding. It has no executable client, runtime dependency,
 telemetry, proxy, or custom OAuth implementation. The repository's package
-builder is development tooling and is excluded from the submission ZIP.
+builder is development tooling and is excluded from the release ZIP.
 
 - The user chooses the Guardhouse URL.
 - The workflow validates the URL and discovers the MCP resource from

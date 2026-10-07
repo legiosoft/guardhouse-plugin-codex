@@ -1,17 +1,26 @@
 ---
 name: guardhouse
-description: Get started with Guardhouse, connect, authenticate, inspect connection status, reconnect, change URL, disconnect, or diagnose a self-hosted Guardhouse MCP server in a local OpenAI Codex host. Use for first-use onboarding, Guardhouse setup, server URL changes, OAuth sign-in, MCP connection status, live tool discovery, or the Hello World connection check across Codex CLI, the Codex IDE extension, and the ChatGPT/Codex desktop host. Use guardhouse-applications for application work and guardhouse-branding for sign-in branding and visual appearance; arbitrary self-hosted URLs are not available to hosted-only ChatGPT.
+description: Install or upgrade the Guardhouse Codex plugin, get started with Guardhouse, connect, authenticate, inspect connection status, reconnect, change URL, disconnect, or diagnose a self-hosted Guardhouse MCP server in a local OpenAI Codex host. Use for plugin installation and update guidance, first-use onboarding, server URL changes, OAuth sign-in, live tool discovery, or the Hello World connection check across Codex CLI, the Codex IDE extension, and the ChatGPT/Codex desktop host. Use guardhouse-applications for application work and guardhouse-branding for visual appearance; arbitrary self-hosted URLs are not available to hosted-only ChatGPT.
 ---
 
 # Guardhouse
 
 Connect a local Codex host to the Guardhouse server chosen by the user. Let Codex
 handle MCP and OAuth natively; this skill supplies the safe setup and diagnosis
-workflow.
+workflow. It also explains how to install and upgrade this plugin from GitHub.
+
+## Plugin installation and upgrade requests
+
+For installing or upgrading the **Codex plugin**, or questions about those
+steps, use [the installation and upgrade guide](references/plugin-installation.md)
+before any connection workflow. Package help does not require a Guardhouse
+instance or sign-in. Explain commands for a how-to question; execute package
+changes only when requested. If "upgrade Guardhouse" could mean the plugin or
+the server, clarify the target before changing either.
 
 ## Start with the current connection
 
-Before choosing or performing a workflow, read and apply
+For connection, application, or branding work, read and apply
 [the current-instance and connection-status check](references/connection-status.md).
 Tell the user the configured and, when verified, live Guardhouse instance,
 its connection status, and how to disconnect, reconnect, or switch to another
@@ -48,6 +57,8 @@ and do not present connection-management controls before a connection exists.
 
 ## Choose the workflow
 
+- For plugin installation, updates, or upgrade instructions, follow
+  [references/plugin-installation.md](references/plugin-installation.md).
 - For getting started, first-use onboarding, connect, or change URL, follow
   **Connect** after the opening check.
 - For status, reconnect, sign in again, or disconnect, follow **Manage a

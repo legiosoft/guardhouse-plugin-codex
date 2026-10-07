@@ -32,7 +32,7 @@ approval.
 4. Update documentation and `CHANGELOG.md` when behavior changes.
 5. Validate every affected skill, the manifest, JSON, YAML, and internal links.
 6. Exercise relevant manual cases without using production secrets.
-7. Build the submission ZIP with `scripts/build-package.ps1`. Its explicit
+7. Build the release ZIP with `scripts/build-package.ps1`. Its explicit
    file list excludes development tooling and local artifacts; `.gitignore`
    alone does not control what the local plugin installer copies.
 8. Open a focused pull request describing the behavior and validation.

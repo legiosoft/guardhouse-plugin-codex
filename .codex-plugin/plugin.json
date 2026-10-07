@@ -1,7 +1,7 @@
 {
   "name": "guardhouse",
   "version": "0.2.0",
-  "description": "Connect local Codex to self-hosted Guardhouse through native MCP/OAuth, then inspect, audit, integrate, and safely configure supported applications and visual branding.",
+  "description": "Install and upgrade Guardhouse in local Codex, connect to your chosen server through native MCP/OAuth, then inspect, audit, integrate, and safely configure supported applications and visual branding.",
   "author": {
     "name": "LegioSoft",
     "url": "https://guardhouse.cloud"
@@ -54,7 +54,7 @@
     "com.openai": {
       "onboardingSkill": "./skills/guardhouse/SKILL.md",
       "publication": {
-        "release_notes": "0.2.0 beta candidate: current-instance status and connection controls, stable OAuth callback reuse across instances, application inspection and audits, guarded browser configuration, and visual branding workflows. Corrects incomplete-list replacement handling and custom HTML identifier selection. Requires local Codex execution and administrator-enabled Guardhouse integration."
+        "release_notes": "0.2.0 beta candidate: GitHub installation and upgrade guidance, current-instance status and connection controls, stable OAuth callback reuse across instances, application inspection and audits, guarded browser configuration, and visual branding workflows. Corrects incomplete-list replacement handling and custom HTML identifier selection. Requires local Codex execution and administrator-enabled Guardhouse integration."
       }
     }
   }
