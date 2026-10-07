@@ -1,0 +1,61 @@
+{
+  "name": "guardhouse",
+  "version": "0.2.0",
+  "description": "Connect local Codex to self-hosted Guardhouse through native MCP/OAuth, then inspect, audit, integrate, and safely configure supported applications and visual branding.",
+  "author": {
+    "name": "LegioSoft",
+    "url": "https://guardhouse.cloud"
+  },
+  "homepage": "https://guardhouse.cloud/docs/",
+  "repository": "https://github.com/legiosoft/guardhouse-plugin-codex",
+  "license": "Apache-2.0",
+  "keywords": [
+    "guardhouse",
+    "authentication",
+    "identity",
+    "oauth",
+    "iam",
+    "developer-tools",
+    "application-configuration",
+    "access-management",
+    "application-audit",
+    "branding",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Guardhouse",
+    "shortDescription": "Connect and manage Guardhouse",
+    "longDescription": "The official Guardhouse beta for local OpenAI Codex hosts, developed and maintained by LegioSoft. A Guardhouse administrator must enable the integration and register the stable OAuth callback before sign-in. Connect to your own Guardhouse instance through native MCP OAuth, inspect connection status, switch instances, inspect and audit applications, integrate local projects, and safely configure supported browser-application fields and visual sign-in branding. Arbitrary self-hosted connections require a local Codex host.",
+    "developerName": "LegioSoft",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Native MCP/OAuth connection",
+      "Live application catalog",
+      "Application security audits",
+      "Confirmed browser configuration",
+      "Safe branding inspection and configuration",
+      "Local project integration"
+    ],
+    "websiteURL": "https://guardhouse.cloud",
+    "supportURL": "https://guardhouse.cloud/contacts",
+    "privacyPolicyURL": "https://guardhouse.cloud/privacy-policy",
+    "termsOfServiceURL": "https://guardhouse.cloud/terms",
+    "defaultPrompt": [
+      "Show my current Guardhouse instance and connection status, and how to disconnect, reconnect, or switch instances.",
+      "Audit my Guardhouse application configuration.",
+      "Review and update my Guardhouse sign-in branding."
+    ],
+    "brandColor": "#402DAF",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  },
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/guardhouse/SKILL.md",
+      "publication": {
+        "release_notes": "0.2.0 beta candidate: current-instance status and connection controls, stable OAuth callback reuse across instances, application inspection and audits, guarded browser configuration, and visual branding workflows. Corrects incomplete-list replacement handling and custom HTML identifier selection. Requires local Codex execution and administrator-enabled Guardhouse integration."
+      }
+    }
+  }
+}

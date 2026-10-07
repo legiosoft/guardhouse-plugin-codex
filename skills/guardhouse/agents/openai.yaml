@@ -1,0 +1,8 @@
+interface:
+  display_name: "Guardhouse Connection"
+  short_description: "Check instance status and manage the connection"
+  default_prompt: "Use $guardhouse to show my current Guardhouse instance and connection status, and explain how to disconnect, reconnect, or switch instances."
+  brand_color: "#402DAF"
+
+policy:
+  products: ["CODEX"]

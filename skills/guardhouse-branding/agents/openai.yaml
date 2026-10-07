@@ -1,0 +1,7 @@
+interface:
+  display_name: "Guardhouse Branding"
+  short_description: "Inspect and safely configure visual branding"
+  default_prompt: "Use $guardhouse-branding to review my Guardhouse sign-in branding."
+
+policy:
+  products: ["CODEX"]

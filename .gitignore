@@ -1,0 +1,15 @@
+# Operating systems
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# Logs and local validation artifacts
+*.log
+.tmp/
+.validation/
+dist/
+*.zip

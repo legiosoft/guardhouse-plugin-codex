@@ -1,0 +1,20 @@
+{
+  "name": "guardhouse",
+  "interface": {
+    "displayName": "Guardhouse"
+  },
+  "plugins": [
+    {
+      "name": "guardhouse",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+interface:
+  display_name: "Guardhouse Applications"
+  short_description: "Inspect, audit, and configure applications"
+  default_prompt: "Use $guardhouse-applications to audit this project's Guardhouse application."
+  brand_color: "#402DAF"
+
+policy:
+  products: ["CODEX"]
