@@ -56,6 +56,51 @@ surface exists, mark the unknown fields unverified and give one local status
 action. Do not inspect the credential store or call `hello` just to display
 this opening summary.
 
+## First use without a configured server
+
+When the active host confirms that no Guardhouse server is configured or live,
+explain the situation in plain language before requesting setup details:
+
+> Guardhouse is installed and ready to set up. No Guardhouse server is
+> connected yet.
+>
+> Guardhouse manages sign-in and access for your applications. This plugin
+> lets Codex help review application settings and sign-in branding.
+>
+> To connect, you need your Guardhouse server's web address and an account
+> allowed to administer it. You will sign in through your browser; do not
+> send passwords or tokens here.
+>
+> What is the HTTPS web address of the Guardhouse server you want to use?
+
+Adapt this example to the user's request; do not enforce its exact wording.
+Avoid MCP, issuer, scope, callback, and tool-list terminology in this first
+explanation. Introduce a technical setup requirement only when it becomes
+the next action. If the user already supplied a URL, use it without asking
+again. For a status-only request, explain how to start connecting instead of
+asking for setup details or starting sign-in. For an application or branding
+request, explain that it requires a connected server, retain that task, and
+route through `$guardhouse` setup before continuing it.
+
+If the user does not know the address, direct them to the person who manages
+Guardhouse for their organization. If they do not have a Guardhouse server,
+explain that the plugin connects to an existing deployment and offer the
+[Guardhouse setup documentation](https://guardhouse.cloud/docs/). Do not
+invent a server, account, or callback port, and do not provision a deployment
+without a separate request. Ask only the next needed question.
+
+This introduction applies only to an observed unconfigured state. When a
+saved URL exists but live inspection is unavailable, identify that saved
+server and say its connection has not yet been verified; do not claim that
+no server is configured. If the host cannot establish either configuration
+or live state, explain that uncertainty and give one supported local status
+action before proposing setup.
+
+Installation makes the skills available. Show this introduction when Codex
+runs the getting-started or another Guardhouse workflow; do not promise an
+automatic installation popup, background status check, or startup message.
+The host controls how it presents the declared onboarding skill.
+
 ## Tell the user how to control the connection
 
 Keep the opening concise, for example:
@@ -67,8 +112,9 @@ Keep the opening concise, for example:
 
 This is illustrative wording, not a verified instance or required layout.
 Tailor it to the actual status. With no selected instance, explain how to
-connect by providing its HTTPS URL. With a disabled connection, explain that
-reconnect re-enables the saved instance. With an unverified connection, label
+get started as described above instead of presenting disconnect or switch
+controls for a connection that does not exist. With a disabled connection,
+explain that reconnect re-enables the saved instance. With an unverified connection, label
 that uncertainty rather than claiming a successful connection.
 
 Explaining controls does not authorize using them. Continue an already

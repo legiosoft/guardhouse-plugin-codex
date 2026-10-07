@@ -30,8 +30,9 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Document explicit `-ReplaceArchive` rebuilding of the same unpublished
   candidate after validation, with atomic replacement of only the expected
   ZIP and no automatic release-version changes.
-- Start unconfigured installations by requesting the user's Guardhouse
-  instance URL.
+- Explain Guardhouse at first use for unconfigured users, outline the required
+  server address, administrator account, and browser sign-in, and guide the
+  next step by asking for their Guardhouse instance URL.
 - Add optional connection onboarding, support, release-note, and Codex-product
   metadata; identify beta/local scope and administrator prerequisites in the
   listing while retaining a skills-only package without bundled MCP

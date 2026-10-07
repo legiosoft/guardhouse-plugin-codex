@@ -1,6 +1,6 @@
 ---
 name: guardhouse
-description: Connect, authenticate, inspect connection status, reconnect, change URL, disconnect, or diagnose a self-hosted Guardhouse MCP server in a local OpenAI Codex host. Use for Guardhouse setup, server URL changes, OAuth sign-in, MCP connection status, live tool discovery, or the Hello World connection check across Codex CLI, the Codex IDE extension, and the ChatGPT/Codex desktop host. Use guardhouse-applications for application work and guardhouse-branding for sign-in branding and visual appearance; arbitrary self-hosted URLs are not available to hosted-only ChatGPT.
+description: Get started with Guardhouse, connect, authenticate, inspect connection status, reconnect, change URL, disconnect, or diagnose a self-hosted Guardhouse MCP server in a local OpenAI Codex host. Use for first-use onboarding, Guardhouse setup, server URL changes, OAuth sign-in, MCP connection status, live tool discovery, or the Hello World connection check across Codex CLI, the Codex IDE extension, and the ChatGPT/Codex desktop host. Use guardhouse-applications for application work and guardhouse-branding for sign-in branding and visual appearance; arbitrary self-hosted URLs are not available to hosted-only ChatGPT.
 ---
 
 # Guardhouse
@@ -17,6 +17,10 @@ Tell the user the configured and, when verified, live Guardhouse instance,
 its connection status, and how to disconnect, reconnect, or switch to another
 URL. Use the same opening for application and branding work. Refresh the
 summary after a connection change without repeating it for every tool call.
+For an observed unconfigured installation, use the reference's first-use
+explanation: what Guardhouse does, why a server connection is needed, and the
+one next setup action. Do not assume the user knows MCP or OAuth terminology,
+and do not present connection-management controls before a connection exists.
 
 ## Operating rules
 
@@ -44,7 +48,8 @@ summary after a connection change without repeating it for every tool call.
 
 ## Choose the workflow
 
-- For connect or change URL, follow **Connect**.
+- For getting started, first-use onboarding, connect, or change URL, follow
+  **Connect** after the opening check.
 - For status, reconnect, sign in again, or disconnect, follow **Manage a
   connection**.
 - For requests about a Guardhouse application, callback/logout URLs, browser
@@ -87,12 +92,13 @@ do not save ignored keys or accept an instance-specific callback as a fallback.
 
 Ask:
 
-> What is the HTTPS URL of your Guardhouse server? You can provide the server
-> root or its full MCP URL. I will use it only to discover the configured
-> Guardhouse MCP endpoint.
+> What is the HTTPS web address of the Guardhouse server you want to use?
+> Use the server's main address, not a link to an individual settings page.
 
 Accept a full `/mcp` URL or the deployment root. Do not guess a tenant URL.
 If the user already supplied the target URL, use it without asking again.
+If they do not know the address or have no deployment, apply the first-use
+guidance in the shared opening reference before continuing setup.
 
 ### 3. Validate and normalize
 

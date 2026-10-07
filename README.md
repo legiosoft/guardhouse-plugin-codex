@@ -24,6 +24,36 @@ sign-in branding, and diagnose connection failures.
 > Application creation, registration settings, email templates, roles,
 > native/service writes, deletion, and secret rotation are not supported.
 
+## Get started
+
+After installing and enabling the plugin, select its getting-started prompt or
+ask:
+
+```text
+$guardhouse Help me get started with Guardhouse.
+```
+
+If Codex confirms that no Guardhouse server is configured or connected, the
+skill explains that the plugin is ready, but still needs a connection.
+Guardhouse manages sign-in and access for your applications. To connect, you
+need the address of an existing Guardhouse server and an authorized Guardhouse
+system-administrator account. The first question is: **What is the HTTPS
+address of your Guardhouse server?** Browser sign-in comes later, after the
+connection settings and administrator prerequisites are ready; do not paste
+passwords or tokens into the chat.
+
+If you do not have a server or know its address, ask your Guardhouse
+administrator or follow the
+[Guardhouse setup documentation](https://guardhouse.cloud/docs/). Installing
+this plugin does not create a server or account.
+
+This explanation appears when Codex invokes the onboarding or Guardhouse skill,
+or when you select or use it. This skills-only package has no background startup
+notification; Codex controls the installation interface. If an address is
+already saved but the live connection cannot be verified, the skill shows that
+address and reports the connection as unverified instead of assuming that setup
+is missing.
+
 ## Distribution model
 
 Version 0.2.0 is a skills-only package. It supports user-specific Guardhouse
@@ -100,7 +130,7 @@ code.
 After OpenAI approves the candidate and LegioSoft publishes it, open the
 built-in Plugins Directory from local Codex in the desktop app, find
 **Guardhouse** by **LegioSoft**, and install and enable it. Then invoke
-`$guardhouse` to inspect the connection status and connect your deployment.
+`$guardhouse` to get started and connect your deployment.
 
 Guardhouse is not currently listed there. Installing this skills package will
 still require the local execution environment and administrator prerequisites
@@ -210,7 +240,7 @@ skill, and eligibility findings before requesting review.
 
 ## Connect
 
-Start by invoking the skill:
+To inspect an existing connection without starting setup, ask:
 
 ```text
 $guardhouse Show my current Guardhouse instance and connection status.
@@ -223,6 +253,7 @@ connection. When available, the read-only instance summary identifies the
 deployment actually serving the current session; a changed configured URL
 alone does not prove the session switched. The plugin continues an already
 requested task without forcing a connection-menu choice.
+An explicit status-only request does not change configuration or start sign-in.
 
 To connect an instance:
 
@@ -237,7 +268,9 @@ Each installation connects to the user's chosen deployment. On a fresh install
 with no configured or supplied URL, the skill asks the user for their
 Guardhouse HTTPS URL before discovering or configuring a connection.
 
-The equivalent local configuration, using the URL returned by discovery, is:
+The equivalent local configuration is below. The example address and port are
+illustrative: use the URL returned by discovery and your administrator-approved
+callback URL and matching port.
 
 ```toml
 [mcp_servers.guardhouse]

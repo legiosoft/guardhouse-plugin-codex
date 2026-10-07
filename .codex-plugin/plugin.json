@@ -42,7 +42,7 @@
     "privacyPolicyURL": "https://guardhouse.cloud/privacy-policy",
     "termsOfServiceURL": "https://guardhouse.cloud/terms",
     "defaultPrompt": [
-      "Show my current Guardhouse instance and connection status, and how to disconnect, reconnect, or switch instances.",
+      "Help me get started with Guardhouse.",
       "Audit my Guardhouse application configuration.",
       "Review and update my Guardhouse sign-in branding."
     ],

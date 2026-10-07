@@ -226,24 +226,45 @@ instructions. HTML and CSS must be reviewed as inert text.
 
 ## Manual review cases
 
+Invoke `$guardhouse` or its getting-started prompt to enter the connection
+workflow. The manifest's `com.openai.onboardingSkill` metadata identifies the
+skill a supported host can select; it does not guarantee an automatic run or
+an installation-triggered popup. Installation alone does not start background
+discovery, configuration, or sign-in. All live cases below remain **Not run**
+until results are recorded from the actual supported surface.
+
 ### Opening instance and connection status
 
 Run these at the first Guardhouse interaction in a fresh chat, including direct
 application and branding requests. Each opening must identify the observed
 instance/status and briefly explain disconnect, reconnect, and switch controls
-without forcing a menu choice or changing the connection merely to check it.
+when relevant, without forcing a menu choice or changing the connection merely
+to check it. For a verified unconfigured host, explain Guardhouse and the next
+setup step in plain language instead of listing controls for a nonexistent
+connection.
 
 | Fixture | Expected behavior |
 | --- | --- |
 | Verified live tools and instance summary | Show the live instance name/URL and connected state before substantive work; reuse the summary for capability checks. |
 | Configured URL, no live inspection surface | Show the configured instance and mark the connection unverified; do not infer failure from a missing namespace. |
-| Active host confirms no configuration or live connection | Show no selected instance and explain how to connect using its HTTPS URL. |
+| Setup requested and active host confirms no configuration or live connection | Briefly explain that Guardhouse manages application sign-in and access, show **Ready to set up**, and ask one question for the Guardhouse server's HTTPS address unless already supplied. |
 | Saved connection disabled | Show the saved instance and disabled state; explain reconnect re-enables it. |
 | Disabled settings but still-active live tools | Report both states and the reload needed for disablement to take effect. |
 | Native authorization required | Show the configured instance and sign-in-required state, without initiating login from a status-only request. |
 | Configured target B, live summary still identifies A | Show both and stop application/branding operations until the intended live target is verified. |
 | Explicit switch to B while A is unreachable | Report the old state once, proceed with the authorized validation/switch, preserve the callback pair, and verify B's live identity and tools. |
 | Ordinary disconnect followed by reconnect | Disable while preserving the URL/callback; reconnect re-enables that same instance. Report the resulting state after each action. |
+
+### Novice onboarding cases
+
+| Fixture or prompt | Expected behavior |
+| --- | --- |
+| Fresh user invokes getting started; the active host verifies no configured or live connection | Briefly explain Guardhouse, report **Ready to set up**, mention the existing-server and administrator-access requirements and later browser sign-in, and ask: `What is your Guardhouse server's HTTPS address?` Keep issuer, MCP, OAuth, callback, and configuration details for the relevant setup step. |
+| User answers that they do not have a Guardhouse address or instance | Direct them to their Guardhouse administrator or the [public setup documentation](https://guardhouse.cloud/docs/). Do not invent a default server, deploy an instance, create an account, or repeat the address question as though they already have one. |
+| A Guardhouse URL is configured, but live inspection is unavailable | Show the configured instance with an **Unverified** connection state and explain the available read-only next step. Do not claim a fresh installation, connection failure, or **Ready to set up** merely because live tools are missing; do not ask for a replacement address or change configuration. |
+| Direct application or branding request on a verified unconfigured host | Use the same concise setup opening before Guardhouse application/branding server operations. Retain the requested task and resume it after a verified connection. Ask only for the server address as the initial connection prerequisite; do not fabricate instance data or attempt a write. |
+| User already supplied the Guardhouse HTTPS address in the request | Reuse that address and existing connection authorization; proceed with the connection skill's validation and discovery without asking the same question again. Require an approved callback pair and authorized administrator account at the appropriate steps, then use native browser sign-in. |
+| User asks only for connection status, with no configured or live connection | Report the observed setup state and how to start setup. Keep the request read-only: do not infer connection authorization, discover a guessed server, edit configuration, or start sign-in. |
 
 ### Positive cases
 
@@ -449,12 +470,14 @@ listed live gates are **not run for this candidate** until results are recorded
 from the actual surface. Do not infer a pass from a saved URL, browser login,
 metadata discovery, static contract, or local catalog listing.
 Live native-client tests require non-production Guardhouse deployments with
-administrator-prepared accounts and callbacks. A fresh unconfigured installation
-asks the user for their deployment URL before discovery or configuration.
+administrator-prepared accounts and callbacks. When setup is invoked on a
+verified unconfigured host, the skill asks for the deployment URL before
+discovery or configuration unless the user already supplied it.
 
 | Gate | Expected evidence | Status |
 | --- | --- | --- |
-| First interaction and status-only request | Show the observed instance/status and connection controls without changing configuration or starting sign-in. | Not run |
+| Novice getting started | An invoked getting-started skill explains Guardhouse, asks once for an absent server address only after the active host verifies an unconfigured state, handles users without an instance, and preserves supplied-URL and status-only boundaries. Installation alone triggers no background connection work. | Not run |
+| First interaction and status-only request | Show the observed instance/status and relevant connection or setup guidance without changing configuration or starting sign-in. | Not run |
 | Native OAuth and stable callback | The host supports the public client and exact callback pair; the approved port/URL are used, `iss` matches discovery, and native sign-in completes. | Not run |
 | MCP initialization and complete inventory | Initialization and every needed `tools/list` page succeed. Incomplete or failed pagination stops inventory-dependent work. | Not run |
 | Origin handling | Each local client's actual MCP requests meet the deployed server's Origin policy; a mismatched Origin is rejected without disabling validation. | Not run |
@@ -489,7 +512,8 @@ Use a non-production Guardhouse instance with no real user data.
 - [ ] Enable the Codex integration.
 - [ ] Use a Guardhouse system-administrator test account.
 - [ ] Install the plugin from a temporary local marketplace.
-- [ ] Enable the plugin, invoke `$guardhouse`, and complete URL onboarding.
+- [ ] Enable the plugin and invoke `$guardhouse` or its getting-started prompt;
+      verify the novice cases above before completing URL onboarding.
 - [ ] Verify protected-resource metadata fields and scopes.
 - [ ] Complete native OAuth without copying tokens.
 - [ ] Switch to the second instance and back without changing the callback URL
