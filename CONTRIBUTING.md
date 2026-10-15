@@ -48,9 +48,11 @@ configuration change from a verified MCP response. Keep error examples
 sanitized. State the current capability boundary accurately: browser, native,
 and service applications are readable/auditable; only existing browser
 applications support bounded confirmed application writes. Visual branding is
-readable and supports complete desired-state writes when its live capabilities
-allow them; branding assets remain admin-UI-only. Do not claim application
-creation, registration settings, email templates, roles, native/service writes,
+readable and supports complete desired-state writes and scoped custom HTML/CSS
+edits when its live capabilities allow them; branding assets remain
+admin-UI-only. Email templates support full-source reads, revisioned subject,
+HTML and override-status edits, and explicitly requested administrator test
+delivery. Do not claim application creation, registration settings, roles, native/service writes,
 deletion, or secret rotation.
 
 By contributing, you agree that your contribution is licensed under

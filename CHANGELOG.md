@@ -5,7 +5,36 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased — 0.2.0 candidate
+## Unreleased — 0.3.0 candidate
+
+### Added
+
+- Add `guardhouse-email-templates` for the live transactional-template catalog,
+  complete saved and default HTML/subject reads, placeholder review, revisioned
+  editing, and enabling or disabling custom overrides. Disabling an override
+  retains the saved content and falls back to the built-in template.
+- Add explicitly requested test email delivery to the authenticated
+  administrator using synthetic sample values, with no automatic resend after
+  an uncertain delivery outcome.
+- Add complete branding custom-source reads with defaults, supported page/state
+  identifiers, token guidance, and scoped layout/page/state HTML/CSS edits.
+
+### Changed
+
+- Route email-template work from the connection and application skills and
+  apply the shared current-instance and live-capability checks to it.
+- Document the sixteen-tool server catalog `1.1.0`, separate custom-code
+  capabilities, source review, optional-field preservation, and clear-versus-
+  omit semantics. Preserve exact existing user authorization for each action.
+- Correct top-level tool argument names to the actual camelCase schemas while
+  preserving snake_case response and nested DTO field names.
+- Include all four skills in the allowlisted release package and update the
+  package metadata and publication checks for the expanded beta scope.
+- Clarify skill discovery and tool selection, custom-code inheritance and CSS
+  ordering, and saved-versus-effective email content. Keep existing exact
+  authorization valid and inspect a local project only when the task needs it.
+
+## 0.2.0 candidate (unreleased baseline)
 
 ### Added
 

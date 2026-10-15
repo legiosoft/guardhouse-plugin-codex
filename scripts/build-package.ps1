@@ -546,7 +546,7 @@ try {
     }
     $skillNames = @($payload.Keys | Where-Object { $_ -match '^skills/[^/]+/SKILL\.md$' })
     if (-not $skillNames.Count) { Stop-Package 'At least one skill entry is required.' }
-    foreach ($requiredSkill in @('guardhouse', 'guardhouse-applications', 'guardhouse-branding')) {
+    foreach ($requiredSkill in @('guardhouse', 'guardhouse-applications', 'guardhouse-branding', 'guardhouse-email-templates')) {
         if (-not $payload.ContainsKey('skills/' + $requiredSkill + '/SKILL.md')) {
             Stop-Package 'A required Guardhouse skill is missing.'
         }

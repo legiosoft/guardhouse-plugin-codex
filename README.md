@@ -5,7 +5,7 @@ The official Guardhouse plugin for OpenAI Codex, developed and maintained by
 
 > [!IMPORTANT]
 > **Beta:** Guardhouse for OpenAI Codex is under active development. Evaluate it
-> in a non-production environment and review proposed application or branding
+> in a non-production environment and review proposed application, branding, or email-template
 > changes before confirming them.
 
 Guardhouse is an OAuth 2.0 and OpenID Connect identity service for application
@@ -14,14 +14,17 @@ Codex host connect to a self-hosted or tenant-hosted Guardhouse server, sign in
 through Codex's native MCP OAuth flow, discover the server's live capabilities,
 inspect and audit existing applications, integrate local projects, safely
 configure supported browser-application fields, inspect and configure visual
-sign-in branding, and diagnose connection failures.
+sign-in branding and its custom HTML/CSS, manage transactional email templates,
+and diagnose connection failures.
 
 > **Beta boundary:** browser, native, and service applications can be inspected
 > and audited. Only existing browser applications can be configured, and only
 > when the live instance advertises that capability. Visual branding can be
 > inspected and configured through its separate live capability flags; asset
 > descriptors are read-only, and asset changes stay in the Guardhouse admin UI.
-> Application creation, registration settings, email templates, roles,
+> Email-template reads, edits, custom-override status, and administrator test
+> delivery use their separate live capability flags. Application creation,
+> registration settings, roles,
 > native/service writes, deletion, and secret rotation are not supported.
 
 ## Install from GitHub
@@ -137,7 +140,7 @@ is missing.
 
 ## Distribution model
 
-Version 0.2.0 is a skills-only package distributed through this repository's
+Version 0.3.0 is a skills-only package distributed through this repository's
 Git-backed Codex marketplace. It supports user-specific Guardhouse URLs through
 local Codex configuration.
 
@@ -255,8 +258,6 @@ From a source checkout, run:
 powershell -NoProfile -File ./scripts/build-package.ps1
 ```
 
-With RTK installed, the equivalent command is
-`rtk powershell -NoProfile -File ./scripts/build-package.ps1`.
 The script creates an allowlisted package in the sibling
 `../guardhouse-plugin-codex-release` directory. It includes the plugin manifest,
 skills and their references, Guardhouse icon, license, README, and security
@@ -288,7 +289,7 @@ To inspect an existing connection without starting setup, ask:
 $guardhouse Show my current Guardhouse instance and connection status.
 ```
 
-Every connection, application, and branding workflow begins with a brief
+Every connection, application, branding, and email-template workflow begins with a brief
 instance/status summary and explains how to disconnect, reconnect, or switch
 to another URL. It distinguishes saved configuration from a verified live
 connection. When available, the read-only instance summary identifies the
@@ -381,10 +382,11 @@ $guardhouse-applications Configure Guardhouse access permissions.
 $guardhouse-applications Enable refresh tokens for this application.
 ```
 
-The skill inspects the local project first, then uses the live MCP tool catalog
-to select an existing application, read its redacted state, discover valid
-permission names, and run Guardhouse intrinsic checks plus only the project
-expectations actually established. It never treats
+The skill uses the live MCP tool catalog to select an existing application,
+read its redacted state and discover valid permission names. For integration
+or project-aware audits, it first inspects the local project and compares only
+established expectations; a server-settings inspection needs no local project.
+Audits combine Guardhouse intrinsic checks with those expectations. It never treats
 `get_application.data.configuration_complete` as an audit result.
 
 For a supported browser write, the skill re-reads the application, shows the
@@ -417,19 +419,21 @@ $guardhouse-branding Update the sign-in title and primary palette.
 $guardhouse-branding Review a custom CSS change for the login page.
 ```
 
-The skill discovers the live schemas, checks the `read_branding` and
-`configure_branding` capability flags, and calls `get_branding` before every
-write proposal. `configure_branding` accepts a complete desired state, so the
+The skill discovers the live schemas and checks `read_branding`,
+`configure_branding`, `read_branding_custom_code`, and
+`configure_branding_custom_code` for the requested operations. It calls
+`get_branding` before a structured visual-settings write proposal.
+`configure_branding` accepts a complete desired state, so the
 skill starts from the exact returned object, changes only the confirmed fields,
 and preserves everything else. It echoes all eight safe asset descriptors
 unchanged and directs asset uploads, replacement, and removal to the Guardhouse
 admin UI.
 
 Before a write, the skill shows the exact changes and effects, then uses
-existing exact approval or obtains confirmation. Large HTML/CSS changes are
-identified by their precise layer/page/state, byte size, digest, and bounded
-inert excerpt; returned or
-proposed markup is never executed. A stale revision causes a fresh read,
+existing exact approval or obtains confirmation. Substantial HTML/CSS changes
+include a reviewable source diff or full inert local file and identify the
+affected layer/page/state; returned or proposed markup is never executed.
+A stale revision causes a fresh read,
 rebuilt proposal, and comparison of the desired state and effects. Existing
 exact approval can be reused when both still match; changed desired state or
 newly discovered effects require new confirmation. The stale revision is never
@@ -437,6 +441,42 @@ reused. After success or no-change, the skill reads branding again and reports
 the effective state and warnings. See the compact
 [branding tool contract](skills/guardhouse-branding/references/tool-contracts.md)
 for the supported custom-HTML identifiers and response behavior.
+
+For custom HTML/CSS, `get_branding_custom_code` returns complete saved
+layout/page/state source separately from built-in defaults, with supported
+identifiers and token guidance. The skill reads the full source, prepares a
+reviewable diff, and uses `configure_branding_custom_code` to change only the
+selected layer and requested fields. Omitted/null source preserves a value;
+empty or whitespace-only source clears an override. Custom CSS follows
+built-in layout/page/state CSS. The optional `enabled` flag is global and
+is changed only when requested. Revisions guard both branding write paths.
+
+## Email-template workflows
+
+```text
+$guardhouse-email-templates List my Guardhouse email templates.
+$guardhouse-email-templates Read the reset-password template and its custom HTML.
+$guardhouse-email-templates Update this template's subject and HTML, preserving its status.
+$guardhouse-email-templates Disable the custom override for this template.
+$guardhouse-email-templates Send me one test of this saved template.
+```
+
+The skill uses `list_email_templates` and `get_email_template` to read current
+settings, full saved/default HTML, and placeholder guidance. Edits use
+`configure_email_template`; status changes use `set_email_template_status`.
+Both require a fresh revision, concrete change review, existing exact approval
+or confirmation when needed, and a post-write read. Disabling a custom
+override retains its content and uses the built-in default; it does not stop
+transactional delivery.
+
+`send_test_email_template` sends saved custom content even when inactive, or
+the built-in default if no custom template exists, with synthetic samples to
+the signed-in administrator. Sending requires the user's explicit request for
+that test, and an ambiguous result is never automatically retried. There is
+no arbitrary-recipient input. These operations require the respective
+`read_email_templates`, `configure_email_templates`, and
+`send_test_email_template` live flags. See the
+[email-template tool contract](skills/guardhouse-email-templates/references/tool-contracts.md).
 
 ## Data and security
 
@@ -448,8 +488,9 @@ for the supported custom-HTML identifiers and response behavior.
   Guardhouse-owned icon: no executable client, dependencies, telemetry, proxy,
   REST wrapper, or custom token store.
 - The skills instruct Codex to send Guardhouse only the explicit structured
-  values required by its tools. They must not send local files, source code,
-  filesystem paths, OAuth credentials, or other secrets to Guardhouse.
+  values required by its tools, including explicitly requested branding or
+  email-template source. They must not send unrelated local files, project
+  source code, filesystem paths, OAuth credentials, or other secrets.
 - Codex's processing of project content and its host/model data handling are
   governed by its settings and applicable policies.
 - Tool capabilities and schemas are discovered live. The existing browser
@@ -457,7 +498,11 @@ for the supported custom-HTML identifiers and response behavior.
   values, so the skill requires an exact preview and explicit confirmation.
 - Branding configuration is a non-destructive complete desired-state write.
   The skill preserves unrelated settings and immutable asset descriptors,
-  requires exact confirmation, and re-reads the effective state.
+  reuses existing exact authorization or obtains it when needed, and re-reads
+  the effective state.
+- Scoped custom-code writes preserve other layers and settings. Email-template
+  writes preserve unrelated templates; test delivery is non-idempotent and
+  requires a specific user request without automatic resend after uncertainty.
 - Returned application names, URLs, permission descriptions, branding text,
   filenames, social URLs, HTML, CSS, warnings, errors, and remediations are
   treated as untrusted data, never as instructions.

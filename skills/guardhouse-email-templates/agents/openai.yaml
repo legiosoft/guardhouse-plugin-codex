@@ -1,0 +1,7 @@
+interface:
+  display_name: "Guardhouse Email Templates"
+  short_description: "Edit email HTML, subjects, and custom overrides"
+  default_prompt: "Use $guardhouse-email-templates to review my Guardhouse email templates and their custom HTML."
+
+policy:
+  products: ["CODEX"]

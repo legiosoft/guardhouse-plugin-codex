@@ -7,8 +7,8 @@ release's scope.
 
 ## Package scope
 
-The `0.2.0` package contains separate connection/troubleshooting,
-application-management, and visual-branding skills. It requires local Codex
+The `0.3.0` package contains separate connection/troubleshooting,
+application-management, visual-branding, and email-template skills. It requires local Codex
 execution and does not bundle `.mcp.json` or lifecycle hooks. The candidate
 retains its beta scope.
 
@@ -54,7 +54,7 @@ Repository evidence establishes:
 - Codex client selection: the supported nested
   `mcp_servers.<name>.oauth.client_id` setting selects `guardhouse_codex`
   without dynamic registration; and
-- catalog version: `1.0.0`;
+- catalog version: `1.1.0` (sixteen tools);
 - `hello`: read-only connection check;
 - `get_instance_summary`: read-only instance and authoritative per-kind
   capability summary;
@@ -71,15 +71,29 @@ Repository evidence establishes:
   revision and eight safe asset descriptors; and
 - `configure_branding`: non-destructive, idempotent complete desired-state
   visual-branding configuration with explicit user interaction, revision
-  checking, immutable asset descriptors, and post-write reload data.
+  checking, immutable asset descriptors, and post-write reload data;
+- `get_branding_custom_code`: read complete saved layout/page/state HTML/CSS,
+  built-in defaults, supported identifiers, and token guidance;
+- `configure_branding_custom_code`: revisioned scoped source and optional
+  global enablement edits with omitted-field preservation;
+- `list_email_templates` and `get_email_template`: read template metadata,
+  complete saved/default subject and HTML, and placeholder guidance;
+- `configure_email_template` and `set_email_template_status`: revisioned
+  subject/HTML and custom-override activation edits; and
+- `send_test_email_template`: non-idempotent, explicitly requested saved-template
+  test delivery using synthetic samples to the signed-in administrator only.
 
 Browser, native, and service applications are readable and auditable. Only
 existing browser applications are configurable, subject to the live capability
 flags. Visual branding is readable and configurable subject to the independent
-`read_branding` and `configure_branding` flags; asset changes remain outside
-MCP. All application kinds currently report `creatable: false`. The nine-tool
-MCP catalog does not expose application creation, registration settings, email
-templates, roles, native/service writes, deletion, secret retrieval or
+`read_branding`, `configure_branding`, `read_branding_custom_code`, and
+`configure_branding_custom_code` flags; asset changes remain outside MCP.
+Email templates use `read_email_templates`, `configure_email_templates`, and
+`send_test_email_template`. Disabling a custom override retains it and falls
+back to the built-in template; it does not suppress transactional delivery.
+All application kinds currently report `creatable: false`. The MCP catalog
+does not expose application creation, registration settings, roles,
+native/service writes, deletion, secret retrieval or
 rotation. Runtime `tools/list` schemas and backend source remain authoritative;
 the plugin includes only compact contract references.
 
@@ -90,7 +104,7 @@ Guardhouse restart before re-enablement.
 
 ## Surface support
 
-| Surface | `0.2.0` model | OAuth and MCP behavior |
+| Surface | `0.3.0` model | OAuth and MCP behavior |
 | --- | --- | --- |
 | Codex CLI | Supported for local installation and direct MCP configuration | `codex mcp login guardhouse`, local callback, native credential store, reload session, live discovery |
 | Codex IDE extension | Direct MCP configuration is supported; plugins are not available in the IDE | Add Streamable HTTP server, select **Authenticate**, restart extension, live discovery |
@@ -150,31 +164,32 @@ active MCP URL; verify this against every supported local client.
 - Name: **Guardhouse**
 - Identifier: `guardhouse`
 - Publisher: **LegioSoft**
-- Version: `0.2.0`
+- Version: `0.3.0`
 - Category: **Developer Tools**
 - License: Apache-2.0
 
 ### Short description
 
-Connect Codex to Guardhouse, audit applications, and safely configure supported
-browser settings and visual branding.
+Manage Guardhouse with Codex
 
 ### Long description
 
-Guardhouse is an OAuth 2.0 and OpenID Connect identity service for application
-authentication, authorization, and access management. This LegioSoft-maintained
-beta connects local OpenAI Codex hosts through native MCP OAuth, discovers live
-capabilities, inspects and audits existing browser, native, and service
-applications, integrates local projects, and configures supported fields on
-existing browser applications. It also inspects and safely configures visual
-sign-in branding through complete desired-state updates with explicit
-confirmation and revision checks.
+The official Guardhouse plugin by LegioSoft. Connect a local Codex host to your
+Guardhouse server through native MCP OAuth. Inspect and audit existing
+applications, integrate local projects, and configure supported browser
+settings. Update sign-in colors, typography, layout and content, or edit
+complete custom HTML/CSS for a shared layout, page or state. Read saved and
+default email templates, edit subjects and HTML, enable or disable custom
+overrides, and send a requested test to the signed-in administrator. Available
+operations follow the server's live capabilities. This beta requires an
+administrator-enabled integration and registered stable OAuth callback; asset
+uploads and removals use the Guardhouse admin UI.
 
 ### Starter prompts
 
 1. Help me get started with Guardhouse.
-2. Audit my Guardhouse application configuration.
-3. Review and update my Guardhouse sign-in branding.
+2. Review and update my Guardhouse sign-in branding.
+3. Review my Guardhouse email templates and custom HTML.
 
 ### Public properties
 
@@ -204,8 +219,9 @@ identity data, authorization, logs, retention, residency, and access.
 
 The skills instruct Codex to inspect the local project and send only the
 structured identifiers, filters, project expectations, or confirmed desired
-configuration required by Guardhouse tools. They prohibit including local
-files, source code, filesystem paths, tokens, secrets, cookies, authorization
+configuration required by Guardhouse tools, including requested branding and
+email-template source. They prohibit including unrelated local files, project
+source code, filesystem paths, tokens, secrets, cookies, authorization
 codes, or sensitive headers in tool inputs or diagnostics. Codex's native OAuth
 flow handles the authentication protocol. These instructions describe plugin
 workflows, not an independent runtime control over Codex's data handling.
@@ -282,7 +298,7 @@ connection.
 | Fresh user invokes getting started; the active host verifies no configured or live connection | Briefly explain Guardhouse, report **Ready to set up**, mention the existing-server and administrator-access requirements and later browser sign-in, and ask: `What is your Guardhouse server's HTTPS address?` Keep issuer, MCP, OAuth, callback, and configuration details for the relevant setup step. |
 | User answers that they do not have a Guardhouse address or instance | Direct them to their Guardhouse administrator or the [public setup documentation](https://guardhouse.cloud/docs/). Do not invent a default server, deploy an instance, create an account, or repeat the address question as though they already have one. |
 | A Guardhouse URL is configured, but live inspection is unavailable | Show the configured instance with an **Unverified** connection state and explain the available read-only next step. Do not claim a fresh installation, connection failure, or **Ready to set up** merely because live tools are missing; do not ask for a replacement address or change configuration. |
-| Direct application or branding request on a verified unconfigured host | Use the same concise setup opening before Guardhouse application/branding server operations. Retain the requested task and resume it after a verified connection. Ask only for the server address as the initial connection prerequisite; do not fabricate instance data or attempt a write. |
+| Direct application, branding, or email-template request on a verified unconfigured host | Use the same concise setup opening before the requested server operations. Retain the requested task and resume it after a verified connection. Ask only for the server address as the initial connection prerequisite; do not fabricate instance data or attempt a write. |
 | User already supplied the Guardhouse HTTPS address in the request | Reuse that address and existing connection authorization; proceed with the connection skill's validation and discovery without asking the same question again. Require an approved callback pair and authorized administrator account at the appropriate steps, then use native browser sign-in. |
 | User asks only for connection status, with no configured or live connection | Report the observed setup state and how to start setup. Keep the request read-only: do not infer connection authorization, discover a guessed server, edit configuration, or start sign-in. |
 
@@ -455,7 +471,7 @@ connection.
      exact approval only when both still match.
    - Expected safe result: no blind retry and no reuse of the stale revision.
 8. **Branding asset mismatch**
-   - Scenario: a proposed `desired_branding` asset descriptor differs from the
+   - Scenario: a proposed `desiredBranding` asset descriptor differs from the
      immediate `get_branding` result.
    - Expected behavior: do not call `configure_branding`; restore every asset
      descriptor exactly and direct the requested asset change to the admin UI.
@@ -472,15 +488,24 @@ connection.
 
 ## Candidate validation matrix
 
-Static review and live integration are separate checks. The repository catalog
-was resolved by native Codex CLI `0.160.1` using a read-only local-source
+Offline checks for the `0.3.0` source candidate (2026-10-15): all four skills
+passed the skill frontmatter/scaffold validator, and the package builder
+validated source privacy, metadata, links, and the 19-file allowlisted ZIP.
+Against the companion server source, the actual MCP SDK generated all sixteen
+tool schemas; offline projection checks covered all 35 branding page/state
+scenarios and 17 built-in email templates. These checks used no live OAuth
+connection or SMTP delivery and do not satisfy the live gates below.
+
+Static review and live integration are separate checks. Historical baseline:
+the `0.2.0` repository catalog was resolved by native Codex CLI `0.160.1` using a read-only local-source
 override: `guardhouse@guardhouse`, version `0.2.0`, available, not installed or
 enabled. Its `source.path: "./"` resolves to the repository-root plugin. That
-check does not establish remote availability, sign-in, or MCP functionality.
+check does not establish discovery of the `0.3.0` candidate, remote
+availability, sign-in, or MCP functionality.
 
 | Surface | Intended scope | Candidate result | Remaining gate |
 | --- | --- | --- | --- |
-| Codex CLI | Published GitHub marketplace; native local MCP/OAuth | Local catalog discovery passed. Fresh remote installation and live integration not run. | Publish the catalog and plugin files, install the candidate, restart the session, complete native OAuth, and verify live identity/tools and recovery. |
+| Codex CLI | Published GitHub marketplace; native local MCP/OAuth | Historical 0.2.0 local catalog discovery passed. 0.3.0 native discovery, fresh remote installation, and live integration not run. | Publish the catalog and plugin files, install the candidate, restart the session, complete native OAuth, and verify live identity/tools and recovery. |
 | ChatGPT desktop app, local Codex surface | Git-backed/local plugin installation; local skills and MCP configuration | Remote installation and live integration not run. | Confirm installation/enablement, configuration reload, native sign-in, and the same live/recovery cases. |
 | Codex IDE extension | Direct MCP configuration and authentication; plugin installation is unavailable | Not run. | Confirm compatible client/callback settings, authenticate and restart, then verify live tools and recovery through direct MCP. |
 | Hosted-only ChatGPT/Codex | Arbitrary user-selected Guardhouse URLs are outside this package's scope | Not applicable. | Unsupported by this package. |
@@ -509,7 +534,12 @@ discovery or configuration unless the user already supplied it.
 | Browser application write | Fresh read, exact replacement-set/effects approval, current revision, one write, and post-write read/audit. After a stale revision, re-read and reconfirm only changed desired state or effects. | Not run |
 | Branding write | Immediate complete read, preserved unrelated fields/assets, exact confirmation, current revision, and post-write re-read; test stale revision, asset mismatch, and validation failure. | Not run |
 | Incomplete application read | Missing/false `configuration_complete` never supplies an inferred full replacement/removal list. Preserve omitted arrays or use independently established exact sets with approval of possible unseen removals; report remaining incomplete verification. | Not run |
-| Custom-HTML identifier support | Recognize catalog `1.0.0` contract page/state pairs even when live fields are plain strings; require authoritative evidence for unknown versions/pairs and never require a schema enum solely to recognize known identifiers. | Not run |
+| Custom-HTML identifier support | Use the supported catalog returned by `get_branding_custom_code`; catalog `1.0.0`/`1.1.0` contract pairs remain valid with plain-string schemas. Require authoritative evidence for unknown versions/pairs. | Not run |
+| Scoped custom-source write | Read complete saved/default HTML/CSS and guidance, preserve untouched fields/layers, distinguish omitted/null from clear, review concrete source, write once with current revision, and re-read. | Not run |
+| Email-template reads and edits | Discover types, read complete saved/default HTML and placeholders, preserve activation unless requested, update with current revision, then re-read success/no-change. | Not run |
+| Custom-template status | Explain that disable uses default delivery; retain saved content. Enabling an absent override saves the built-in content as active custom. | Not run |
+| Administrator test delivery | Explicit send request, immediate read/current revision, saved custom even inactive or built-in fallback, synthetic values, signed-in administrator only; no automatic retry after uncertainty. | Not run |
+| Rejected test before dispatch | Known pre-send revision/validation/permission rejection sends nothing; resolve within scope, re-read and reuse exact explicit send authorization only if intended content/effects still match. | Not run |
 | Unsupported or incomplete capabilities | Native/service writes, creation, absent tools, incomplete access-option lists, and unsupported branding writes are declined or kept read-only. | Not run |
 | Reload and recovery | Persist approved settings across restart; verify disconnect/reconnect, changed URL, expired/revoked authorization, and safe failure messages. | Not run |
 
@@ -570,12 +600,26 @@ Use a non-production Guardhouse instance with no real user data.
 - [ ] Configure branding only from an immediate complete read, preserve the
       current font unless explicitly changed, echo all eight assets unchanged,
       preview exact changes, and obtain explicit confirmation.
-- [ ] Review a large HTML/CSS proposal by precise layer/page/state, byte size,
-      digest, and bounded inert excerpt without executing it.
+- [ ] Review substantial HTML/CSS by precise layer/page/state and a complete
+      source diff or inert local file, without executing it. A digest or
+      excerpt alone is insufficient.
 - [ ] Exercise branding stale-revision, asset-mismatch, validation-error, and
       no-change behavior, including required reconfirmation where applicable.
 - [ ] Verify every successful or no-change branding write is followed by
       `get_branding` and reports the re-read effective state and warnings.
+- [ ] Verify `get_branding_custom_code` returns full saved and built-in source,
+      supported identifiers, token guidance, global switch, and revision.
+- [ ] Review and apply one scoped HTML/CSS change; preserve omitted/null fields,
+      clear only with explicitly supplied empty/whitespace source, preserve unrelated layers and
+      assets, exercise stale revisions, and re-read success/no-change.
+- [ ] Invoke `$guardhouse-email-templates` and verify the three email capability
+      flags, complete catalog, saved/default HTML, and placeholder guidance.
+- [ ] Edit one subject/HTML with activation preserved and a fresh revision;
+      re-read success/no-change and exercise stale-revision/validation errors.
+- [ ] Disable and enable a custom override; verify default fallback preserves
+      delivery and saved content, and absent-template activation uses defaults.
+- [ ] Explicitly request one administrator test with sample data; verify saved
+      inactive-custom versus default behavior and no retry after uncertainty.
 - [ ] Disable and re-enable the plugin.
 - [ ] Restart/reload the desktop host and verify persisted local configuration.
 - [ ] Repeat in Codex CLI.
@@ -598,8 +642,6 @@ Run from a source checkout:
 powershell -NoProfile -File ./scripts/build-package.ps1
 ```
 
-With RTK installed, use
-`rtk powershell -NoProfile -File ./scripts/build-package.ps1`.
 The default output is the sibling `../guardhouse-plugin-codex-release`
 directory.
 
@@ -658,11 +700,26 @@ release version.
       of service-side retention, residency, and deletion behavior.
 - [ ] Do not use OpenAI logos or imply OpenAI first-party ownership.
 - [ ] Document the local-client requirements and managed workspace restrictions.
-- [ ] Describe the nine catalog `1.0.0` tools, existing-browser-only
-      application writes, and complete desired-state branding writes without
+- [ ] Describe the sixteen catalog `1.1.0` tools, existing-browser-only
+      application writes, complete/scoped branding writes, and email-template
+      editing/status/administrator-test behavior without
       implying the package itself exposes a hosted MCP server.
 
-## Candidate release notes for 0.2.0
+## Candidate release notes for 0.3.0
+
+Adds email-template catalog and full-source inspection, placeholder guidance,
+revisioned subject/HTML editing, custom-override enablement, and explicitly
+requested administrator test delivery. Disabling a custom override uses the
+built-in default while preserving the saved draft. Tests use synthetic values,
+can preview inactive custom content, and are never automatically resent after
+an uncertain delivery outcome.
+Adds complete branding custom HTML/CSS reads with defaults, live identifiers,
+and token guidance, plus scoped layout/page/state source edits. Updates plugin
+routing, capability checks, and the four-skill allowlisted release package.
+These additions require server catalog `1.1.0` capabilities. Live native-client
+and email-delivery checks remain unrun until their results are recorded above.
+
+### Previous 0.2.0 candidate baseline
 
 Adds a dedicated application workflow for local-project inspection, catalog
 discovery, redacted application reads, access-option discovery, intrinsic and

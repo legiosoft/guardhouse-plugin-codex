@@ -1,20 +1,18 @@
 ---
 name: guardhouse-applications
-description: Inspect, audit, integrate, or safely configure existing Guardhouse applications through live MCP tools. Use when the user asks to connect a React, native, or service project to Guardhouse; inspect or audit a Guardhouse application; update callback, logout, or browser-origin URLs; configure access permissions; or enable, disable, or tune refresh tokens. Supports writes only for existing browser applications; application creation and native or service writes are out of scope.
+description: Inspect and audit existing Guardhouse applications, connect local projects, or configure browser-application callbacks, logout URLs, origins, access permissions and refresh tokens through MCP. Native and service applications support reads and audits; application creation and secret management use the admin workflow.
 ---
 
 # Guardhouse Applications
 
-Before local-project inspection or application work, apply
+Before instance work, apply
 [the shared current-instance and connection-status opening](../guardhouse/references/connection-status.md).
-Report the target instance and status, briefly explain disconnect/reconnect/
-switch controls, and continue the user's task without forcing a menu choice.
-Do this even when the application tools are already available. Reuse a fresh
-opening `get_instance_summary` response for the capability checks below; do not
-operate against a stale live instance after a configuration switch.
+Show the instance/status opening once per unchanged connection and reuse its
+fresh `get_instance_summary` response for capability checks. After a connection
+switch, verify the new live instance before continuing.
 
-Inspect the local project yourself, use Guardhouse's live MCP catalog, and keep
-local project data local. Read
+Use Guardhouse's live MCP catalog. For project integration or comparison,
+inspect the local project and keep its source local. Read
 [references/tool-contracts.md](references/tool-contracts.md) before calling an
 application tool.
 
@@ -48,14 +46,16 @@ desired state; a general request does not authorize additional changes.
 - Use `request_id` only as a safe support correlation value. Report warnings
   separately from successful results.
 - Route sign-in branding and visual-appearance work to
-  `$guardhouse-branding`; do not duplicate its workflow here. Do not claim
-  support for application creation, registration settings, email templates,
-  roles, native/service writes, deletion, or secret rotation.
+  `$guardhouse-branding` and transactional email-template work to
+  `$guardhouse-email-templates`; do not duplicate their workflows here. Do not
+  claim support for application creation, registration settings, roles,
+  native/service writes, deletion, or secret rotation.
 
 ## Inspect the local project
 
-After the opening connection check, before application-specific reads or
-configuration:
+For local integration or a project-aware audit, establish the project's
+expectations before comparing them with Guardhouse. A request only to inspect
+server settings does not require local-project access.
 
 1. Determine the framework and whether the target is a browser, native, or
    service application.
@@ -83,7 +83,8 @@ configuration:
 3. Ask the user to choose when multiple plausible applications remain. If no
    suitable application exists, explain that it must be created through the
    Guardhouse admin workflow; do not simulate creation.
-4. Call `get_application` with the selected `application_id`. Treat its
+4. Call `get_application` with `applicationId` set to the selected returned
+   `application_id`. Treat its
    configuration as redacted observed state. `configuration_complete` means
    bounded fields were returned completely; it is not an audit result.
 5. When access is relevant, call `list_application_access_options`, paginate
@@ -92,8 +93,9 @@ configuration:
 
 ## Audit safely
 
-1. Call `audit_application` for every inspection or integration workflow when
-   the selected kind is auditable.
+1. Call `audit_application` for requested audits and project-integration
+   verification when the selected kind is auditable. Use it for an inspection
+   when its findings help answer the user's question.
 2. Supply only expectations established from the local project or explicitly
    supplied by the user. Omit unknown expectations so the comparison is
    skipped. Supply an empty collection only when the complete expected set is
@@ -158,7 +160,7 @@ After Guardhouse configuration is known:
    user has already authorized that exact proposal; do not ask again merely
    because the workflow reached this step.
 7. After confirmation, call `configure_application` once with the current
-   `expected_revision`. Do not reuse an older revision.
+   `expectedRevision`. Do not reuse an older revision.
 8. On `PRECONDITION_FAILED`, re-read, explain what changed, and rebuild the
    entire proposal. Obtain confirmation for changed desired state or newly
    discovered effects; reuse prior exact approval only when both still match.

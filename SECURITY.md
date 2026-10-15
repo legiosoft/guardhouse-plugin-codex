@@ -3,7 +3,7 @@
 ## Supported versions
 
 Guardhouse for OpenAI Codex is currently a beta. Security fixes are provided for
-the latest `0.2.x` release.
+the latest `0.3.x` release.
 
 ## Report a vulnerability
 
@@ -37,7 +37,8 @@ builder is development tooling and is excluded from the release ZIP.
 - MCP initialization and live tool discovery are required before success is
   reported.
 - The skills instruct Codex to send Guardhouse only the explicit structured
-  values required by its tools. They must not send local files, source code,
+  values required by its tools, including requested branding or email-template
+  source. They must not send unrelated local files, project source code,
   filesystem paths, OAuth credentials, or other secrets to Guardhouse. Codex's
   processing of project content and its host/model data handling are governed
   by its settings and applicable policies.
@@ -54,6 +55,12 @@ builder is development tooling and is excluded from the release ZIP.
   exact approval when only the revision changes and both still match.
 - Browser and native projects must never receive a client secret. The MCP tools
   do not return client secrets or Guardhouse access tokens.
+- Branding custom HTML/CSS and email HTML are inspected as inert source.
+  Edits use fresh revisions, concrete content review, and existing exact user
+  authorization or confirmation when needed, followed by an effective read.
+- Test email sends saved content with synthetic samples only to the
+  authenticated administrator. Sending requires an explicit user request for
+  that test and is never automatically retried after an uncertain result.
 
 The operator of the selected Guardhouse deployment controls its availability,
 identity data, access policy, logs, retention, and permissions. Consult the

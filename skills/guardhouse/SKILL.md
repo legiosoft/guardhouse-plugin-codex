@@ -1,6 +1,6 @@
 ---
 name: guardhouse
-description: Install or upgrade the Guardhouse Codex plugin, get started with Guardhouse, connect, authenticate, inspect connection status, reconnect, change URL, disconnect, or diagnose a self-hosted Guardhouse MCP server in a local OpenAI Codex host. Use for plugin installation and update guidance, first-use onboarding, server URL changes, OAuth sign-in, live tool discovery, or the Hello World connection check across Codex CLI, the Codex IDE extension, and the ChatGPT/Codex desktop host. Use guardhouse-applications for application work and guardhouse-branding for visual appearance; arbitrary self-hosted URLs are not available to hosted-only ChatGPT.
+description: Install or upgrade the Guardhouse Codex plugin and connect a local Codex host to a Guardhouse server. Use for onboarding, OAuth sign-in, connection status, tool discovery, reconnecting, switching servers, disconnecting, or troubleshooting the MCP connection. Application, branding, and email-template operations have dedicated Guardhouse skills.
 ---
 
 # Guardhouse
@@ -20,12 +20,12 @@ the server, clarify the target before changing either.
 
 ## Start with the current connection
 
-For connection, application, or branding work, read and apply
+For instance work, read and apply
 [the current-instance and connection-status check](references/connection-status.md).
 Tell the user the configured and, when verified, live Guardhouse instance,
 its connection status, and how to disconnect, reconnect, or switch to another
-URL. Use the same opening for application and branding work. Refresh the
-summary after a connection change without repeating it for every tool call.
+URL. Show this once per unchanged connection, including when another Guardhouse
+skill routes here; refresh it after a connection change.
 For an observed unconfigured installation, use the reference's first-use
 explanation: what Guardhouse does, why a server connection is needed, and the
 one next setup action. Do not assume the user knows MCP or OAuth terminology,
@@ -35,7 +35,8 @@ and do not present connection-management controls before a connection exists.
 
 - Follow the user's explicit instructions within platform constraints. Reuse
   existing authorization for the same exact action; do not ask for it again.
-- Ask one actionable question at a time.
+- Ask for missing setup details one actionable question at a time; do not ask
+  the user to repeat a supplied URL or authorized connection action.
 - Explain that the server URL identifies the user's Guardhouse deployment and
   that browser login grants Codex access to it.
 - Never ask for or accept an access token, refresh token, authorization code,
@@ -46,12 +47,8 @@ and do not present connection-management controls before a connection exists.
   initialization and returns a valid `tools/list` response.
 - Discover tools after authentication. Do not assume that `hello` is the only
   tool forever or invent tools that the server did not advertise.
-- Treat the current `hello` tool as harmless only when its live schema and
-  annotations still confirm that behavior. Route application inspection,
-  audit, access, local integration, and configuration to
-  `$guardhouse-applications`. Route sign-in branding inspection, review, and
-  configuration to `$guardhouse-branding`. Do not duplicate either workflow
-  here.
+- Treat `hello` as harmless only when its live schema and annotations confirm
+  that behavior. Use the dedicated skills below for instance operations.
 - Sanitize errors. Do not print sensitive headers, codes, tokens, cookies, or
   complete raw responses.
 
@@ -71,6 +68,10 @@ and do not present connection-management controls before a connection exists.
   typography, layout, backgrounds, branding text, social links, assets, or
   supported custom HTML/CSS, invoke `$guardhouse-branding`. If its required
   live tools are missing, complete this connection workflow first.
+- For requests about Guardhouse transactional email templates, custom email
+  HTML, subjects, enabling or disabling a custom template, or sending a test
+  email, invoke `$guardhouse-email-templates`. If its required live tools are
+  missing, complete this connection workflow first.
 - For any failure, read
   [references/troubleshooting.md](references/troubleshooting.md) and apply the
   matching remediation.
@@ -275,7 +276,7 @@ discovery to verify:
 
 Refresh the opening instance/status summary. When `get_instance_summary` is
 available, verify that its live `public_mcp_url` matches the new target before
-reporting a switch successful or continuing application or branding work.
+reporting a switch successful or continuing application, branding, or email-template work.
 
 If the connection succeeds with no tools, report that exact state. Do not call
 it a fully working Guardhouse integration.
